@@ -1,3 +1,18 @@
+# 创建学生对象
+class Student(object):
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def printStu(self):
+        print(self.name, self.score)
+
+
+giao = Student("giaogiao", 100)
+
+giao.printStu()
+
+
 class 人物(object):
 
     def __init__(self, name, sex, slogan, *status):  # 创建属性
