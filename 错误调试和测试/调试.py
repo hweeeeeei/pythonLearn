@@ -14,4 +14,15 @@ def main():
     foo('0')
 
 
-main()
+# main()
+
+# logging
+# 把print()替换为logging是第3种方式，和assert比，logging不会抛出错误，而且可以输出到文件：
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+s = '0'
+n = int(s)
+logging.debug('n = %d' % n)
+print(10 / n)
