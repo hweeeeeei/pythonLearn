@@ -43,7 +43,4 @@ parser.feed('''<html>
     <p>Some <a href=\"#\">html</a> HTML&nbsp;tutorial...<br>END</p>
 </body></html>''')
 
-# 练习
-# 找一个网页，例如https://www.python.org/events/python-events/，用浏览器查看源码并复制，然后尝试解析一下HTML，输出Python官网发布的会议时间、名称和地点。
 
-uri = 'https://www.python.org/events/python-events/'
