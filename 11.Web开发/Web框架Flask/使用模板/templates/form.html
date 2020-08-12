@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+</head>
+<body>
+
+{% if message %}
+
+<p style="color: red">{{message}}</p>
+{% endif %}
+
+<form action="/signin" method="post">
+
+    <p>
+        <leged>请登陆</leged>
+    </p>
+    <p>
+        <input name="username" value="{{username}}"></p>
+    <p>
+        <input name="password" type="password"></p>
+
+    <p>
+        <button type="submit">登陆</button>
+    </p>
+
+</form>
+
+</body>
+</html>
