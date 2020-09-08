@@ -21,6 +21,7 @@ class MyHTMLParser(HTMLParser):
         super(MyHTMLParser, self).__init__()
         self.__parsedata = ''  # 设置一个空的标志位
 
+    # 标签开始
     def handle_starttag(self, tag, attrs):
         if ('class', 'event-title') in attrs:
             self.__parsedata = 'name'  # 通过属性判断如果该标签是我们要找的标签，设置标志位
@@ -31,9 +32,11 @@ class MyHTMLParser(HTMLParser):
         if ('class', 'event-location') in attrs:
             self.__parsedata = 'location'
 
+    # 标签结束
     def handle_endtag(self, tag):
         self.__parsedata = ''  # 在HTML 标签结束时，把标志位清空
 
+    # 标签中的数据
     def handle_data(self, data):
         if self.__parsedata == 'name':
             print('会议名称:%s' % data)  # 通过标志位判断，输出打印标签内容
