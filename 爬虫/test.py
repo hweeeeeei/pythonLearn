@@ -1,11 +1,36 @@
 from html.parser import HTMLParser
 # 导入MySQL驱动:
 import mysql.connector
+import threading
 
 from googletrans import Translator
 
 # 创建连接
 conn = mysql.connector.connect(user='root', password='123', database='vike', host='127.0.0.1')
+
+
+def runTrEn(id, data):
+    translator = Translator()
+    translate = translator.translate(data, src='zh-cn', dest='en')
+    en = translate.text
+
+    conn = mysql.connector.connect(user='root', password='123', database='vike', host='127.0.0.1')
+    # 打开游标Cursor，执行SQL语句
+    cursor = conn.cursor()
+    cursor.execute(" UPDATE    `vike`.`vk_task_type`  SET  `type_name_en` = '%s'  WHERE  `id` = '%s'" % (en, id))
+    conn.commit()
+
+
+def runTrKm(id, data):
+    translator = Translator()
+    translate = translator.translate(data, src='zh-cn', dest='km')
+    km = translate.text
+
+    conn = mysql.connector.connect(user='root', password='123', database='vike', host='127.0.0.1')
+    # 打开游标Cursor，执行SQL语句
+    cursor = conn.cursor()
+    cursor.execute(" UPDATE    `vike`.`vk_task_type`  SET  `type_name_kh` = '%s'  WHERE  `id` = '%s'" % (km, id))
+    conn.commit()
 
 
 class TypeParser(HTMLParser):
@@ -47,6 +72,8 @@ class TypeParser(HTMLParser):
                 pid = cursor.lastrowid
                 self.__pid2 = pid
                 conn.commit()
+                threading.Thread(target=runTrKm, args=(pid, data,)).start()
+                threading.Thread(target=runTrEn, args=(pid, data,)).start()
             if self.__parsedata == '2':
                 print("2:", data)  # 通过标志位判断，输出打印标签内容
 
@@ -59,6 +86,8 @@ class TypeParser(HTMLParser):
                 pid = cursor.lastrowid
                 self.__pid3 = pid
                 conn.commit()
+                threading.Thread(target=runTrKm, args=(pid, data,)).start()
+                threading.Thread(target=runTrEn, args=(pid, data,)).start()
 
             if self.__parsedata == '33':
                 print("3:", data)  # 通过标志位判断，输出打印标签内容
@@ -69,11 +98,9 @@ class TypeParser(HTMLParser):
                     "INSERT INTO `vike`.`vk_task_type`(pid, `level`, `type_name_ch`) VALUES('%s',3,'%s')" % (
                         self.__pid3, data))
                 pid = cursor.lastrowid
-                #
-                # runTrEn(pid,data)
-                # runTrKm(pid,data)
-
                 conn.commit()
+                threading.Thread(target=runTrKm, args=(pid, data,)).start()
+                threading.Thread(target=runTrEn, args=(pid, data,)).start()
 
 
 if __name__ == '__main__':
@@ -84,27 +111,3 @@ if __name__ == '__main__':
     finally:
         if f:
             f.close()
-
-
-def runTrEn(id, data):
-    translator = Translator()
-    translate = translator.translate(data, src='zh-cn', dest='en')
-    en = translate.text
-
-    conn = mysql.connector.connect(user='root', password='123', database='vike', host='127.0.0.1')
-    # 打开游标Cursor，执行SQL语句
-    cursor = conn.cursor()
-    cursor.execute(" UPDATE    `vike`.`vk_task_type`  SET  `type_name_en` = '%s'  WHERE  `id` = '%s'" % (id, en))
-    conn.commit()
-
-
-def runTrKm(id, data):
-    translator = Translator()
-    translate = translator.translate(data, src='zh-cn', dest='km')
-    km = translate.text
-
-    conn = mysql.connector.connect(user='root', password='123', database='vike', host='127.0.0.1')
-    # 打开游标Cursor，执行SQL语句
-    cursor = conn.cursor()
-    cursor.execute(" UPDATE    `vike`.`vk_task_type`  SET  `type_name_kh` = '%s'  WHERE  `id` = '%s'" % (id, km))
-    conn.commit()
